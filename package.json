@@ -10,6 +10,7 @@
   },
   "scripts": {
     "dev": "pnpm -r --parallel dev",
+    "start": "pnpm --filter backend start",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
     "lint:fix": "pnpm -r lint:fix",
