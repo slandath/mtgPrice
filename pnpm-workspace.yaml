@@ -1,5 +1,9 @@
+shellEmulator: true
+
+trustPolicy: no-downgrade
+
 packages:
-  - 'frontend'
-  - 'backend'
+  - frontend
+  - backend
 allowBuilds:
   esbuild: true
