@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import Login from './components/Login.vue'
 </script>
 
 <template>
-  <Login />
+  <h1>Login</h1>
+  <button>Login with GitHub</button>
 </template>
