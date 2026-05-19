@@ -1,23 +1,15 @@
-// ESM
-import Fastify from 'fastify'
+import { buildApp } from './app';
 
-const fastify = Fastify({
-  logger: true
-})
+const PORT = Number(process.env.PORT) || 3000
 
-fastify.get('/', async () => {
-  return { hello: 'world' }
-})
-
-/**
- * Run the server!
- */
-const start = async () => {
+async function start() {
+  const app = await buildApp()
   try {
-    const port = Number(process.env.PORT || 3000);
-    await fastify.listen({ port, host: "0.0.0.0" })
-  } catch (err) {
-    fastify.log.error(err)
+    await app.listen({ port: PORT, host: '0.0.0.0' })
+    app.log.info(`Server listening on port ${PORT}`)
+  }
+  catch (err) {
+    app.log.error(err)
     process.exit(1)
   }
 }
