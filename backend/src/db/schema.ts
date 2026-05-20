@@ -82,7 +82,7 @@ export const verification = pgTable(
 export const inventory = pgTable(
   'inventory',
   {
-    id: uuid('id').primaryKey(),
+    id: uuid('id').primaryKey().default(crypto.randomUUID()),
     userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
     name: text('name').notNull(),
     quantity: integer('quantity').notNull().default(1),
@@ -94,8 +94,7 @@ export const inventory = pgTable(
       .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
   },
-  table => [index('inventory_userId_idx').on(table.userId),
-  index('inventory_name_idx').on(table.name)]
+  table => [index('inventory_userId_idx').on(table.userId), index('inventory_name_idx').on(table.name)],
 )
 
 export const userRelations = relations(user, ({ many }) => ({

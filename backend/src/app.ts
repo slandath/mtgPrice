@@ -3,6 +3,7 @@ import rateLimit from '@fastify/rate-limit'
 import fastifySensible from '@fastify/sensible'
 import Fastify from 'fastify'
 import { auth } from './utils/auth'
+import inventoryRoutes from './routes/inventory'
 
 function getAllowedOrigins(): string | string[] {
   const corsOrigin = process.env.CORS_ORIGIN
@@ -68,8 +69,11 @@ export async function buildApp() {
     })
   }, { prefix: '/api/auth' })
 
+  await app.register(inventoryRoutes, { prefix: '/api/inventory'})
+
   app.get('/', async () => {
-    return { hello: 'world'}
+    return { hello: 'world' }
   })
+  
   return app
 }

@@ -7,3 +7,4 @@ packages:
   - backend
 allowBuilds:
   esbuild: true
+  vue-demi: true
