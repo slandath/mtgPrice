@@ -2,6 +2,5 @@
 </script>
 
 <template>
-  <h1>Login</h1>
-  <button>Login with GitHub</button>
+  <h1>Home</h1>
 </template>
