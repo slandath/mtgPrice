@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm'
-import { boolean, index, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import { boolean, index, integer, numeric, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
@@ -79,6 +79,25 @@ export const verification = pgTable(
   table => [index('verification_identifier_idx').on(table.identifier)],
 )
 
+export const inventory = pgTable(
+  'inventory',
+  {
+    id: uuid('id').primaryKey(),
+    userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
+    name: text('name').notNull(),
+    quantity: integer('quantity').notNull().default(1),
+    currentPrice: numeric('current_price', { precision: 10, scale: 2 }).notNull(),
+    cost: numeric('cost', { precision: 10, scale: 2 }).notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  table => [index('inventory_userId_idx').on(table.userId),
+  index('inventory_name_idx').on(table.name)]
+)
+
 export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
   accounts: many(account),
@@ -94,6 +113,13 @@ export const sessionRelations = relations(session, ({ one }) => ({
 export const accountRelations = relations(account, ({ one }) => ({
   user: one(user, {
     fields: [account.userId],
+    references: [user.id],
+  }),
+}))
+
+export const inventoryRelations = relations(inventory, ({ one }) => ({
+  user: one(user, {
+    fields: [inventory.userId],
     references: [user.id],
   }),
 }))

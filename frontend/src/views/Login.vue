@@ -21,8 +21,11 @@ async function handleSignIn() {
 
 <template>
   <h1>Login</h1>
-  <div v-if="session.isPending">
-    <p>Loading...</p>
-  </div>
-  <button v-else-if="!session.data" @click="handleSignIn">Login with GitHub</button>
+  <button 
+  @click="handleSignIn" 
+  :aria-busy="session.isPending ? 'true' : 'false'"
+  :disabled="session.isPending"
+  >
+  {{ session.isPending ? 'Loading...' : 'Login with GitHub' }}
+  </button>
 </template>
