@@ -23,6 +23,8 @@ export async function buildApp() {
   await app.register(cors, {
     origin: getAllowedOrigins(),
     credentials: true,
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 
   await app.register(async (scoped) => {

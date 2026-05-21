@@ -1,9 +1,10 @@
 import type { FastifyInstance } from 'fastify'
-import { eq } from 'drizzle-orm'
+import { eq, and } from 'drizzle-orm'
 import { inventory } from '../db/schema'
 import { db } from '../index'
 import { auth } from '../utils/auth'
 import { insertInventorySchema } from '../types/inventory.schema'
+import { priceFetch } from '../services/priceFetch'
 
 export default async function inventoryRoutes(app: FastifyInstance) {
   app.get('/', async (request, reply) => {
@@ -52,5 +53,20 @@ export default async function inventoryRoutes(app: FastifyInstance) {
       console.error('Error inserting data:', error)
       return reply.status(500).send({ error: 'Internal server error'})
     }
+  })
+  
+  app.patch<{ Params: { id: string } }>('/:id/fetch-price', async (request, reply) => {
+    const session = await auth.api.getSession({
+      headers: new Headers(request.headers as Record<string, string>),
+    })
+    if (!session) {
+      return reply.status(401).send({ error: 'Unauthorized' })
+    }
+    const item = await db.select().from(inventory).where(and(eq(inventory.id, request.params.id), eq(inventory.userId, session.user.id))).limit(1)
+    if (!item.length) return reply.status(404).send({error: 'Item not found'})
+    const price = await priceFetch(item[0].url)
+  if (!price) return reply.status(400).send({error: 'Could not fetch price'})
+    await db.update(inventory).set({currentPrice: price }).where(eq(inventory.id, item[0].id))
+  return reply.send({ price })
   })
 }

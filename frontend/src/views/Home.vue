@@ -1,10 +1,26 @@
 <script setup lang="ts">
-import { useQuery } from '@tanstack/vue-query';
+import { reactive } from 'vue';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query';
 import { fetchFromAPI } from '@/api';
+
+const queryClient = useQueryClient()
+const loadingItems = reactive<Record<string, boolean>>({})
 
 const { isPending, isFetching, isError, data, error } = useQuery({
   queryKey: ['items'],
   queryFn: () => fetchFromAPI('/api/inventory'),
+})
+
+const fetchPriceMutation = useMutation({
+  mutationFn: async (id: string) => {
+  loadingItems[id] = true
+  try {
+    return await fetchFromAPI(`/api/inventory/${id}/fetch-price`, { method: 'PATCH' })
+  } finally {
+    loadingItems[id] = false
+  }
+},
+onSuccess: () => queryClient.invalidateQueries({ queryKey: ['items']})
 })
 
 </script>
@@ -19,6 +35,7 @@ const { isPending, isFetching, isError, data, error } = useQuery({
         <th scope="col">Name</th>
         <th scope="col">Current Price</th>
         <th scope="col">Paid (Each)</th>
+        <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
@@ -27,6 +44,7 @@ const { isPending, isFetching, isError, data, error } = useQuery({
         <td>{{ item.name }}</td>
         <td>${{ item.currentPrice }}</td>
         <td>${{ item.cost }}</td>
+        <td><button :aria-busy="loadingItems[item.id]" @click="fetchPriceMutation.mutate(item.id)">Update</button></td>
       </tr>
     </tbody>
   </table>
