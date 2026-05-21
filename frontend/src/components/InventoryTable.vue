@@ -45,7 +45,7 @@ onSuccess: () => queryClient.invalidateQueries({ queryKey: ['items']})
         <td>{{ item.name }}</td>
         <td>${{ item.currentPrice }}</td>
         <td>${{ item.cost }}</td>
-        <td><button :aria-busy="loadingItems[item.id]" @click="fetchPriceMutation.mutate(item.id)">Update</button></td>
+        <td><button :aria-busy="loadingItems[item.id]" @click="fetchPriceMutation.mutate(item.id)">Refresh</button></td>
       </tr>
     </tbody>
   </table>
