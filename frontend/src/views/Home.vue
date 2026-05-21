@@ -10,10 +10,8 @@ const { isPending, isFetching, isError, data, error } = useQuery({
 </script>
 
 <template>
-  <h1>Home</h1>
   <span v-if="isPending || isFetching" aria-busy="true">Loading</span>
   <span v-else-if="isError">Error: {{  error?.message }}</span>
-
   <table v-else-if="data">
     <thead>
       <tr>
@@ -32,10 +30,4 @@ const { isPending, isFetching, isError, data, error } = useQuery({
       </tr>
     </tbody>
   </table>
-
-
-
-  <!-- <ul v-else-if="data"> -->
-    <!-- <li v-for="item in data.inventory" :key="item.id">{{ item.name }}</li>
-  </ul> -->
 </template>
