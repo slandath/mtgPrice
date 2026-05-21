@@ -15,8 +15,8 @@
     "dev": "tsx watch src/server.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "tsc -p tsconfig.build.json",
-    "start": "node dist/server.js"
+    "start": "tsx src/server.ts",
+    "build": "echo 'Skipped - running with tsx in production'"
   },
   "dependencies": {
     "@fastify/cors": "^11.2.0",
