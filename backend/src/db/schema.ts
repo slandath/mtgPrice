@@ -1,4 +1,4 @@
-import { relations } from 'drizzle-orm'
+import { relations, sql } from 'drizzle-orm'
 import { boolean, index, integer, numeric, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 
 export const user = pgTable('user', {
@@ -82,12 +82,13 @@ export const verification = pgTable(
 export const inventory = pgTable(
   'inventory',
   {
-    id: uuid('id').primaryKey().default(crypto.randomUUID()),
+    id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
     userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
     name: text('name').notNull(),
     quantity: integer('quantity').notNull().default(1),
-    currentPrice: numeric('current_price', { precision: 10, scale: 2 }).notNull(),
+    currentPrice: numeric('current_price', { precision: 10, scale: 2 }).notNull().default('0.00'),
     cost: numeric('cost', { precision: 10, scale: 2 }).notNull(),
+    url: text('url').notNull(),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at')
       .defaultNow()
