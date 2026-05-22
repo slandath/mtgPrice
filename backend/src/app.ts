@@ -36,8 +36,7 @@ export async function buildApp() {
     // Use Better-Auth's built-in handler
     scoped.all('/*', async (request, reply) => {
       try {
-        // const url = new URL(request.url, `http://${request.headers.host}`)
-        const url = new URL(request.url, `${request.protocol}://${request.headers.host}`)
+        const url = new URL(request.url, `http://${request.headers.host}`)
         const body = request.method === 'GET' || request.method === 'HEAD'
           ? undefined
           : request.body && typeof request.body === 'object'
@@ -62,20 +61,8 @@ export async function buildApp() {
           reply.header(key, value)
         })
 
-        const setCookieHeaders: string[] = []
-        response.headers.forEach((value, key) => {
-          if (key.toLowerCase() === 'set-cookie') {
-            setCookieHeaders.push(value)
-          } else {
-            reply.header(key, value)
-          }
-        })
-        if (setCookieHeaders.length > 0) {
-          reply.header('set-cookie', setCookieHeaders)
-        }
-
-        // const responseBody = await response.text()
-        // return responseBody
+        const responseBody = await response.text()
+        return responseBody
       }
       catch (error) {
         request.log.error({ err: error }, 'Auth handler error')
