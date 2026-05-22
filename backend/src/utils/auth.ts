@@ -7,6 +7,9 @@ import { db } from '../index'
 const frontendUrl = process.env.FRONTEND_URL
 
 export const auth = betterAuth({
+  account: {
+    skipStateCookieCheck: true,
+  },
   baseURL: process.env.BETTER_AUTH_URL,
   basePath: '/api/auth',
   trustedOrigins: frontendUrl ? [frontendUrl] : [],

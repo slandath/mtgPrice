@@ -36,7 +36,7 @@ export async function buildApp() {
     // Use Better-Auth's built-in handler
     scoped.all('/*', async (request, reply) => {
       try {
-        const url = new URL(request.url, `${request.protocol}://${request.headers.host}`)
+        const url = new URL(request.url, `$http://${request.headers.host}`)
         const body = request.method === 'GET' || request.method === 'HEAD'
           ? undefined
           : request.body && typeof request.body === 'object'
