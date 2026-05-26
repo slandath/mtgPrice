@@ -13,7 +13,7 @@
     "start": "pnpm --filter backend start",
     "build": "pnpm -r build",
     "lint": "eslint .",
-    "lint:fix": "exlint . --fix",
+    "lint:fix": "eslint . --fix",
     "type-check": "pnpm -r type-check",
     "check": "pnpm -r check"
   },
