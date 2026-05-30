@@ -17,6 +17,8 @@
     "type-check": "pnpm -r type-check",
     "check": "pnpm -r check"
   },
+  "dependencies": {
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^9.0.0",
     "@types/node": "^25.9.0",
