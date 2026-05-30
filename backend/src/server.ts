@@ -20,7 +20,7 @@ async function start() {
       catch (error) {
         app.log.error({ err: error }, 'Weekly price refresh failed')
       }
-    })
+    }, { timezone: 'UTC'})
   }
   catch (err) {
     app.log.error(err)
