@@ -42,7 +42,7 @@ export const auth = betterAuth({
           secure: true,
         }
       : {
-          sameSite: 'none',
+          sameSite: 'lax',
           secure: false,
         },
   },
