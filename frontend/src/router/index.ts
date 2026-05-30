@@ -1,16 +1,16 @@
-import { createRouter, createWebHistory } from 'vue-router'
 import { watch } from 'vue'
+import { createRouter, createWebHistory } from 'vue-router'
+import Add from '@/views/Add.vue'
 import { authClient } from '../auth-client'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
-import Add from '@/views/Add.vue'
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: '/login', component: Login },
-    { path: '/', component: Home, meta: { requiresAuth: true} },
-    { path: '/add', component: Add, meta: { requiresAuth: true} },
+    { path: '/', component: Home, meta: { requiresAuth: true } },
+    { path: '/add', component: Add, meta: { requiresAuth: true } },
   ],
 })
 
@@ -29,7 +29,8 @@ router.beforeEach(async (to) => {
   }
   const sessionData = session.value?.data
   const isAuthenticated = !!sessionData?.user
-  if (session.value.isPending) return
+  if (session.value.isPending)
+    return
   if (to.meta.requiresAuth && !isAuthenticated) {
     return '/login'
   }

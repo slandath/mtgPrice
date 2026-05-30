@@ -33,11 +33,11 @@ export function useAuthRedirect() {
     }
   }
 
-    watch(() => session.value.isPending, (isPending) => {
-      if (!isPending && session.value.data) {
-        handleAuthenticated()
-      }
-    }, { immediate: true })
+  watch(() => session.value.isPending, (isPending) => {
+    if (!isPending && session.value.data) {
+      handleAuthenticated()
+    }
+  }, { immediate: true })
 
   return {
     session,

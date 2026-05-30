@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import InventoryTable from '@/components/InventoryTable.vue';
+import InventoryTable from '@/components/InventoryTable.vue'
 </script>
 
 <template>
-<InventoryTable />
+  <InventoryTable />
 </template>

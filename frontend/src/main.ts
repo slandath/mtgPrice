@@ -1,18 +1,19 @@
-import { createApp } from 'vue'
+import Aura from '@primeuix/themes/aura'
 import { VueQueryPlugin } from '@tanstack/vue-query'
 import PrimeVue from 'primevue/config'
-import './assets/styles/main.css'
-import Aura from '@primeuix/themes/aura'
+import { createApp } from 'vue'
 import App from './App.vue'
-import router from "./router"
+import router from './router'
+import ToastService from 'primevue/toastservice';
+import './assets/styles/main.css'
 
 createApp(App).use(PrimeVue, {
-    theme: {
-        preset: Aura,
-        options: {
-            prefix: 'p',
-            darkModeSelector: 'system',
-            cssLayer: false
-        }
-    }
-}).use(router).use(VueQueryPlugin).mount('#app')
+  theme: {
+    preset: Aura,
+    options: {
+      prefix: 'p',
+      darkModeSelector: 'system',
+      cssLayer: false,
+    },
+  },
+}).use(ToastService).use(router).use(VueQueryPlugin).mount('#app')

@@ -1,62 +1,110 @@
 <script setup lang="ts">
-import { fetchFromAPI } from '@/api';
-import { useMutation } from '@tanstack/vue-query';
-import { reactive } from 'vue';
+import type { FormSubmitEvent } from '@primevue/forms'
+import { Form } from '@primevue/forms'
+import { zodResolver } from '@primevue/forms/resolvers/zod'
+import { useMutation } from '@tanstack/vue-query'
+import Button from 'primevue/button'
+import FloatLabel from 'primevue/floatlabel'
+import InputNumber from 'primevue/inputnumber'
+import InputText from 'primevue/inputtext'
+import Message from 'primevue/message'
+import { z } from 'zod'
+import { fetchFromAPI } from '@/api'
+import { useToast } from 'primevue/usetoast'
+import { ref } from 'vue'
 
-const formData = reactive({
-    name: '',
-    quantity: 1,
-    cost: '',
-    url: ''
-})
+const toast = useToast();
+const formRef = ref()
 
 const emit = defineEmits<{
-    (e: 'item-added'): void
+  (e: 'itemAdded'): void
 }>()
 
-const mutation = useMutation({
-    mutationFn: async (data: typeof formData) => {
-        return fetchFromAPI('/api/inventory', {
-            method: 'POST',
-            body: JSON.stringify(data)
-        })
-    },
-    onSuccess: () => {
-        formData.name = ''
-        formData.quantity = 1
-        formData.cost = ''
-        formData.url = ''
-        emit('item-added')
-    }
+const schema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  quantity: z.number().min(1, 'Quantity must be at least 1'),
+  cost: z.number({ message: 'Cost is required' }).min(0, 'Cost must be positive'),
+  url: z.string().min(1, 'URL is required'),
 })
 
-function handleSubmit() {
-    mutation.mutate({ ...formData })
+const initialValues = {
+  name: '',
+  quantity: 1,
+  cost: null as number | null,
+  url: '',
 }
 
+const resolver = zodResolver(schema)
+
+const mutation = useMutation({
+  mutationFn: async (data: typeof initialValues) => {
+    return fetchFromAPI('/api/inventory', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  },
+  onSuccess: () => {
+    toast.add({
+      severity: 'success',
+      summary: 'Item Added!',
+      life: 3000
+    })
+    formRef.value?.reset()
+    emit('itemAdded')
+  },
+})
+
+function handleSubmit({ valid, values }: FormSubmitEvent) {
+  if (valid) {
+    mutation.mutate(values as typeof initialValues)
+  }
+}
 </script>
 
 <template>
-    <form @submit.prevent="handleSubmit">
-        <span v-if="mutation.isError.value" class="pico-background-red-500">{{ mutation.error.value?.message }}</span>
-        <fieldset>
-        <label>
-            Quantity
-        </label>
-        <input v-model="formData.quantity" type="number" name="quantity" placeholder="Qty" aria-label="Qty" required>
-        <label>
-            Name
-        </label>
-        <input v-model="formData.name" type="text" name="text" placeholder="Name" aria-label="Name" required>
-        <label>
-            Cost
-        </label>
-        <input v-model="formData.cost" type="number" name="cost" placeholder="Cost" aria-label="Cost" required>
-        <label>
-            URL
-        </label>
-        <input v-model="formData.url" type="text" name="text" placeholder="URL" aria-label="URL" required>
-        </fieldset>
-        <input type="submit" value="Add Item" />
-    </form>
+  <div class="form-container">
+    <Form ref="formRef" v-slot="$form" :initial-values :resolver :validate-on-blur="true" @submit="handleSubmit">
+      <h2>Add Item</h2>
+      <div class="spacer">
+        <FloatLabel variant="on">
+          <InputNumber name="quantity" input-id="quantity" fluid />
+          <label for="qty">Quantity</label>
+        </FloatLabel>
+        <Message v-if="$form.quantity?.invalid" severity="error" size="small" variant="simple">
+          {{ $form.quantity.error?.message }}
+        </Message>
+      </div>
+      <div class="spacer">
+        <FloatLabel variant="on">
+          <InputText id="name" name="name" fluid />
+          <label for="name">Name</label>
+        </FloatLabel>
+        <Message v-if="$form.name?.invalid" severity="error" size="small" variant="simple" class="padding">
+          {{ $form.name.error?.message }}
+        </Message>
+      </div>
+      <div class="spacer">
+        <FloatLabel variant="on">
+          <InputNumber name="cost" mode="currency" currency="USD" locale="en-US" input-id="cost" fluid />
+          <label for="cost">Cost</label>
+        </FloatLabel>
+        <Message v-if="$form.cost?.invalid" severity="error" size="small" variant="simple" class="padding">
+          {{ $form.cost.error?.message }}
+        </Message>
+      </div>
+      <div class="spacer">
+        <FloatLabel variant="on">
+          <label for="name">URL</label>
+          <InputText id="url" name="url" fluid />
+        </FloatLabel>
+                <Message v-if="$form.url?.invalid" severity="error" size="small" variant="simple" class="padding">
+          {{ $form.url.error?.message }}
+        </Message>
+        <Message size="small" severity="secondary" variant="simple" class="padding">
+          Paste the TCG Player webpage
+        </Message>
+      </div>
+      <Button type="submit" label="Add Item" :loading="mutation.isPending.value" />
+    </Form>
+  </div>
 </template>

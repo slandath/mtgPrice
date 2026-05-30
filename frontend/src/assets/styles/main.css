@@ -10,6 +10,18 @@ body {
   display: flex;
 }
 
+.form-container {
+  padding: 0 1rem 0 1rem;
+}
+
+.padding {
+  padding: 0.5rem 0 0.5rem 0;
+}
+
+.spacer {
+  margin-bottom: 1.5rem;
+}
+
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -35,6 +47,6 @@ body {
   padding-inline: 1rem;
 }
 
-.top-spacing {
-  padding-top: 1rem;
+.table-container {
+  padding: 1rem 1rem 0 1rem;
 }
