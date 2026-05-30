@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify'
-import { eq, and } from 'drizzle-orm'
+import { eq, and, desc } from 'drizzle-orm'
 import { inventory } from '../db/schema'
 import { db } from '../index'
 import { auth } from '../utils/auth'
@@ -15,7 +15,7 @@ export default async function inventoryRoutes(app: FastifyInstance) {
       return reply.status(401).send({ error: 'Unauthorized' })
     }
     try {
-      const userInventory = await db.select().from(inventory).where(eq(inventory.userId, session.user.id))
+      const userInventory = await db.select().from(inventory).where(eq(inventory.userId, session.user.id)).orderBy(desc(inventory.currentPrice))
       return reply.status(200).send({
         inventory: userInventory,
         message: userInventory.length === 0 ? 'No items found for user' : undefined,
