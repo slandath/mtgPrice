@@ -5,6 +5,7 @@ import { db } from '../index'
 import { auth } from '../utils/auth'
 import { insertInventorySchema } from '../types/inventory.schema'
 import { priceFetch } from '../services/priceFetch'
+import { request } from 'node:http'
 
 export default async function inventoryRoutes(app: FastifyInstance) {
   app.get('/', async (request, reply) => {
@@ -69,4 +70,35 @@ export default async function inventoryRoutes(app: FastifyInstance) {
     await db.update(inventory).set({currentPrice: price }).where(eq(inventory.id, item[0].id))
   return reply.send({ price })
   })
+
+app.patch('/refresh-all', async (request, reply) => {
+  const cronSecret = request.headers['cron-secret']
+  if (cronSecret !== process.env.CRON_SECRET) {
+    return reply.status(401).send({ error: 'Unauthorized' })
+  }
+
+  try {
+    const allItems = await db.select().from(inventory)
+    const results = { updated: 0, failed: 0, total: allItems.length }
+
+    for (const item of allItems) {
+      try {
+        const price = await priceFetch(item.url)
+        if (price) {
+          await db.update(inventory).set({ currentPrice: price }).where(eq(inventory.id, item.id))
+          results.updated++
+        } else {
+          results.failed++
+        }
+      } catch {
+        results.failed++
+      }
+    }
+
+    return reply.send(results)
+  } catch (error) {
+    console.error('Error refreshing all prices:', error)
+    return reply.status(500).send({ error: 'Internal server error' })
+  }
+})
 }
