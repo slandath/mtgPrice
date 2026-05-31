@@ -1,6 +1,6 @@
-import { defineConfig } from 'vite'
+import path from 'node:path'
 import vue from '@vitejs/plugin-vue'
-import path from 'path'
+import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -12,12 +12,12 @@ export default defineConfig({
     allowedHosts: ['app', '.railway.app'],
     hmr: {
       host: 'localhost',
-      port: 5173
-          }
-        },
+      port: 5173,
+    },
+  },
   resolve: {
-  alias: {
-  '@': path.resolve(__dirname, './src'),
-} 
-}
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
 })
