@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import { Button } from 'primevue'
+import Button  from 'primevue/button'
 import { useRouter } from 'vue-router'
 import { authClient } from '@/auth-client'
-
 
 const router = useRouter()
 
 async function handleSignOut() {
   try {
     await authClient.signOut()
-    router.push('/')
+    window.location.href = '/login'
   }
   catch (err) {
     console.warn(`Sign out error: ${err}`)

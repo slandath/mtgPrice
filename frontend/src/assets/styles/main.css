@@ -22,14 +22,24 @@ body {
   margin-bottom: 1.5rem;
 }
 
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+}
+
 .navbar {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   background-color: var(--p-emerald-800);
 }
 
 .navbar h1 {
   margin: 0;
+  font-size: clamp(1rem, 2.5vw, 2rem);
 }
 
 .navbar a {
