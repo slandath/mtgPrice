@@ -9,7 +9,7 @@ const router = useRouter()
 async function handleSignOut() {
   try {
     await authClient.signOut()
-    router.push('/')
+    router.push('/login')
   }
   catch (err) {
     console.warn(`Sign out error: ${err}`)
