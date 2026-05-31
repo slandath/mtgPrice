@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import Button from 'primevue/button'
 import Column from 'primevue/column'
 import DataTable from 'primevue/datatable'
+import Message from 'primevue/message'
 import { reactive } from 'vue'
 import { fetchFromAPI } from '@/api'
 
@@ -30,9 +31,9 @@ const fetchPriceMutation = useMutation({
 </script>
 
 <template>
-  <Message v-if="isPending || isFetching" severity="secondary" size="large" variant="simple" class="padding">Loading...</Message>
+  <Message v-if="isPending" severity="secondary" size="large" variant="simple" class="padding">Loading...</Message>
   <span v-else-if="isError">Error: {{ error?.message }}</span>
-  <DataTable v-else-if="data" :value="data.inventory" class="table-container">
+  <DataTable v-else-if="data" :value="data.inventory" :loading="isFetching" class="table-container">
     <Column field="quantity" header="Qty" />
     <Column field="name" header="Name" />
     <Column field="currentPrice" header="Current Price">

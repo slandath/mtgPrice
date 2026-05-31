@@ -16,14 +16,10 @@ import { ref } from 'vue'
 const toast = useToast();
 const formRef = ref()
 
-const emit = defineEmits<{
-  (e: 'itemAdded'): void
-}>()
-
 const schema = z.object({
   name: z.string().min(1, 'Name is required'),
   quantity: z.number().min(1, 'Quantity must be at least 1'),
-  cost: z.number({ message: 'Cost is required' }).min(0, 'Cost must be positive'),
+  cost: z.number({ error: 'Cost is required' }).min(0, 'Cost must be positive'),
   url: z.string().min(1, 'URL is required'),
 })
 
@@ -50,7 +46,6 @@ const mutation = useMutation({
       life: 3000
     })
     formRef.value?.reset()
-    emit('itemAdded')
   },
 })
 
@@ -68,7 +63,7 @@ function handleSubmit({ valid, values }: FormSubmitEvent) {
       <div class="spacer">
         <FloatLabel variant="on">
           <InputNumber name="quantity" input-id="quantity" fluid />
-          <label for="qty">Quantity</label>
+          <label for="quantity">Quantity</label>
         </FloatLabel>
         <Message v-if="$form.quantity?.invalid" severity="error" size="small" variant="simple">
           {{ $form.quantity.error?.message }}
@@ -94,17 +89,17 @@ function handleSubmit({ valid, values }: FormSubmitEvent) {
       </div>
       <div class="spacer">
         <FloatLabel variant="on">
-          <label for="name">URL</label>
           <InputText id="url" name="url" fluid />
+          <label for="url">URL</label>
         </FloatLabel>
-                <Message v-if="$form.url?.invalid" severity="error" size="small" variant="simple" class="padding">
+        <Message v-if="$form.url?.invalid" severity="error" size="small" variant="simple" class="padding">
           {{ $form.url.error?.message }}
         </Message>
         <Message size="small" severity="secondary" variant="simple" class="padding">
           Paste the TCG Player webpage
         </Message>
       </div>
-      <Button type="submit" label="Add Item" :loading="mutation.isPending.value" />
+      <Button type="submit" label="Submit" :loading="mutation.isPending.value" />
     </Form>
   </div>
 </template>

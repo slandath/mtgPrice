@@ -5,6 +5,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import ToastService from 'primevue/toastservice';
+import Tooltip from 'primevue/tooltip'
 import './assets/styles/main.css'
 
 createApp(App).use(PrimeVue, {
@@ -16,4 +17,4 @@ createApp(App).use(PrimeVue, {
       cssLayer: false,
     },
   },
-}).use(ToastService).use(router).use(VueQueryPlugin).mount('#app')
+}).use(ToastService).use(router).use(VueQueryPlugin).directive('tooltip', Tooltip).mount('#app')

@@ -29,8 +29,6 @@ router.beforeEach(async (to) => {
   }
   const sessionData = session.value?.data
   const isAuthenticated = !!sessionData?.user
-  if (session.value.isPending)
-    return
   if (to.meta.requiresAuth && !isAuthenticated) {
     return '/login'
   }

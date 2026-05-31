@@ -3,6 +3,7 @@ import { Button } from 'primevue'
 import { useRouter } from 'vue-router'
 import { authClient } from '@/auth-client'
 
+
 const router = useRouter()
 
 async function handleSignOut() {
@@ -29,8 +30,8 @@ async function handleSignOut() {
         </li>
       </ul>
       <ul class="flex">
-        <li><Button icon="pi pi-plus" @click="router.push('/add')" /></li>
-        <li><Button icon="pi pi-sign-out" @click="handleSignOut" /></li>
+        <li><Button icon="pi pi-plus" aria-label="Add Item" v-tooltip.bottom="{ value: 'Add Item', showDelay: 1000}" @click="router.push('/add')" /></li>
+        <li><Button icon="pi pi-sign-out" aria-label="Log Out" v-tooltip.bottom="{ value: 'Log Out', showDelay: 1000}" @click="handleSignOut" /></li>
       </ul>
     </nav>
   </header>
