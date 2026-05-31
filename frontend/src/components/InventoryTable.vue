@@ -33,7 +33,7 @@ const fetchPriceMutation = useMutation({
 <template>
   <Message v-if="isPending" severity="secondary" size="large" variant="simple" class="padding">Loading...</Message>
   <span v-else-if="isError">Error: {{ error?.message }}</span>
-  <DataTable v-else-if="data" :value="data.inventory" :loading="isFetching" class="table-container">
+  <DataTable v-else-if="data" :value="data.inventory" :loading="isFetching" paginator :rows="10" :rowsPerPageOptions="[10, 25, 50]" class="table-container">
     <Column field="quantity" header="Qty" />
     <Column field="name" header="Name" />
     <Column field="currentPrice" header="Current Price">
