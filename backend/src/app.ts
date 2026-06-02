@@ -1,7 +1,7 @@
 import cors from '@fastify/cors'
 import rateLimit from '@fastify/rate-limit'
 import fastifySensible from '@fastify/sensible'
-import Fastify from 'fastify'
+import Fastify, { FastifyError, FastifyReply, FastifyRequest } from 'fastify'
 import inventoryRoutes from './routes/inventory'
 import { auth } from './utils/auth'
 
@@ -53,17 +53,7 @@ export async function buildApp() {
           headers,
           ...(body ? { body } : {}),
         })
-
         const response = await auth.handler(req)
-
-        // reply.status(response.status)
-        // response.headers.forEach((value, key) => {
-        //   reply.header(key, value)
-        // })
-
-        // const responseBody = await response.text()
-        // return responseBody
-
         reply.status(response.status)
         const setCookieHeaders: string[] = []
         response.headers.forEach((value, key) => {
@@ -87,6 +77,14 @@ export async function buildApp() {
   }, { prefix: '/api/auth' })
 
   await app.register(inventoryRoutes, { prefix: '/api/inventory' })
+
+app.setErrorHandler((error: FastifyError, request: FastifyRequest, reply: FastifyReply) => {
+  request.log.error({ err: error}, 'Unhandled route error')
+  if (error.statusCode && error.statusCode < 500) {
+    return reply.status(error.statusCode).send({ error: error.message })
+  }
+  return reply.status(500).send({ error: 'Internal server error' })
+})
 
   app.get('/', async () => {
     return { hello: 'world' }
