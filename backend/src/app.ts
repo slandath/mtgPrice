@@ -1,11 +1,9 @@
 import cors from '@fastify/cors'
 import rateLimit from '@fastify/rate-limit'
 import fastifySensible from '@fastify/sensible'
-import Fastify, { FastifyError } from 'fastify'
+import Fastify, { FastifyError, FastifyReply, FastifyRequest } from 'fastify'
 import inventoryRoutes from './routes/inventory'
 import { auth } from './utils/auth'
-import { FastifyReply } from 'fastify/types/reply'
-import { FastifyRequest } from 'fastify/types/request'
 
 function getAllowedOrigins(): string | string[] {
   const corsOrigin = process.env.CORS_ORIGIN
@@ -82,7 +80,7 @@ export async function buildApp() {
 
 app.setErrorHandler((error: FastifyError, request: FastifyRequest, reply: FastifyReply) => {
   request.log.error({ err: error}, 'Unhandled route error')
-  if (error.statusCode) {
+  if (error.statusCode && error.statusCode < 500) {
     return reply.status(error.statusCode).send({ error: error.message })
   }
   return reply.status(500).send({ error: 'Internal server error' })

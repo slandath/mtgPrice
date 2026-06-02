@@ -10,7 +10,7 @@ import { auth } from '../utils/auth'
 export default async function inventoryRoutes(app: FastifyInstance) {
   app.addHook('preHandler', async (request, reply) => {
     // Skip auth for the cron job route
-    if (request.routerPath === '/refresh-all' && request.method === 'PATCH') return
+    if (request.routeOptions.url === '/refresh-all' && request.method === 'PATCH') return
     const session = await auth.api.getSession({
       headers: new Headers(request.headers as Record<string, string>),
     })

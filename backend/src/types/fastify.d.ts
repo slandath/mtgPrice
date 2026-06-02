@@ -5,7 +5,6 @@ type Session = NonNullable<Awaited<ReturnType<typeof auth.api.getSession>>>
 
 declare module 'fastify' {
   interface FastifyRequest {
-    routerPath: string
     session: Session
   }
 }
