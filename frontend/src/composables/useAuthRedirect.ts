@@ -1,6 +1,6 @@
-import { watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { authClient } from '../auth-client'
+import { watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { authClient } from "../auth-client";
 
 /**
  * Handles redirecting users after successful authentication.
@@ -8,39 +8,42 @@ import { authClient } from '../auth-client'
  * Checks for redirect targets and navigates the user after login.
  */
 export function useAuthRedirect() {
-  const session = authClient.useSession()
-  const router = useRouter()
-  const route = useRoute()
+  const session = authClient.useSession();
+  const router = useRouter();
+  const route = useRoute();
 
   function getRedirectTarget(): string {
-    const postLoginRedirect = sessionStorage.getItem('post_login_redirect')
-    const queryRedirect = typeof route.query.redirect === 'string' ? route.query.redirect : ''
-    const target = postLoginRedirect || queryRedirect || '/'
-    if (target.startsWith('/') && !target.startsWith('//')) {
-      return target
+    const postLoginRedirect = sessionStorage.getItem("post_login_redirect");
+    const queryRedirect = typeof route.query.redirect === "string" ? route.query.redirect : "";
+    const target = postLoginRedirect || queryRedirect || "/";
+    if (target.startsWith("/") && !target.startsWith("//")) {
+      return target;
     }
-    return '/'
+    return "/";
   }
 
   function handleAuthenticated() {
     try {
-      const target = getRedirectTarget()
-      router.push(target)
-      sessionStorage.removeItem('post_login_redirect')
-    }
-    catch (error) {
-      console.warn(`Redirect error: ${error}`, 'error')
+      const target = getRedirectTarget();
+      router.push(target);
+      sessionStorage.removeItem("post_login_redirect");
+    } catch (error) {
+      console.warn(`Redirect error: ${error}`, "error");
     }
   }
 
-  watch(() => session.value.isPending, (isPending) => {
-    if (!isPending && session.value.data) {
-      handleAuthenticated()
-    }
-  }, { immediate: true })
+  watch(
+    () => session.value.isPending,
+    (isPending) => {
+      if (!isPending && session.value.data) {
+        handleAuthenticated();
+      }
+    },
+    { immediate: true },
+  );
 
   return {
     session,
     handleAuthenticated,
-  }
+  };
 }
