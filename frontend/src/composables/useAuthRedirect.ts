@@ -22,10 +22,10 @@ export function useAuthRedirect() {
     return "/";
   }
 
-  function handleAuthenticated() {
+  async function handleAuthenticated() {
     try {
       const target = getRedirectTarget();
-      router.push(target);
+      await router.push(target);
       sessionStorage.removeItem("post_login_redirect");
     } catch (error) {
       console.warn(`Redirect error: ${error}`, "error");
@@ -36,7 +36,7 @@ export function useAuthRedirect() {
     () => session.value.isPending,
     (isPending) => {
       if (!isPending && session.value.data) {
-        handleAuthenticated();
+       void handleAuthenticated();
       }
     },
     { immediate: true },
