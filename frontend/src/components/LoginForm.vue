@@ -12,20 +12,47 @@ const appUrl = import.meta.env.VITE_APP_URL
   ? `${import.meta.env.VITE_APP_URL}/login`
   : `${window.location.origin}/login`;
 
+// async function handleSignIn() {
+//   try {
+//     isSigningIn.value = true;
+//     await authClient.signIn.social({
+//       provider: "github",
+//       callbackURL: appUrl,
+//     });
+//   } catch (err) {
+//     toast.add({
+//       severity: "error",
+//       summary: "Login Error",
+//       detail: `Authentication failed: ${err}`,
+//     });
+//     console.warn(`Authentication failed: ${err}`, "error");
+//   } finally {
+//     isSigningIn.value = false;
+//   }
+// }
+
 async function handleSignIn() {
   try {
     isSigningIn.value = true;
-    await authClient.signIn.social({
+    const { error } = await authClient.signIn.social({
       provider: "github",
       callbackURL: appUrl,
     });
+    if (error) {
+      toast.add({
+        severity: "error",
+        summary: "Login Error",
+        detail: `Authentication failed: ${error.message}`,
+      });
+      console.warn(`Authentication failed: ${error.message}`);
+    }
   } catch (err) {
     toast.add({
       severity: "error",
       summary: "Login Error",
-      detail: `Authentication failed: ${err}`,
+      detail: `Authentication failed ${String(err)}`,
     });
-    console.warn(`Authentication failed: ${err}`, "error");
+    console.warn(`Authentication failed: ${String(err)}`);
   } finally {
     isSigningIn.value = false;
   }
