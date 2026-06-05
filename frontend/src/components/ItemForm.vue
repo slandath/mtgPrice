@@ -17,10 +17,10 @@ const toast = useToast();
 const formRef = ref();
 
 const schema = z.object({
-  name: z.string().min(1, "Name is required"),
+  name: z.string().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
   quantity: z.number().min(1, "Quantity must be at least 1"),
   cost: z.number({ error: "Cost is required" }).min(0, "Cost must be positive"),
-  url: z.string().min(1, "URL is required"),
+  url: z.url("Must be a valid URL").min(1, "URL is required"),
 });
 
 const initialValues = {
