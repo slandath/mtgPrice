@@ -1,5 +1,5 @@
 import { watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute, useRouter, isNavigationFailure } from "vue-router";
 import { authClient } from "../auth-client";
 
 /**
@@ -25,7 +25,10 @@ export function useAuthRedirect() {
   async function handleAuthenticated() {
     try {
       const target = getRedirectTarget();
-      await router.push(target);
+      const navigationResult = await router.push(target);
+      if (isNavigationFailure(navigationResult)) {
+        return;
+      }
       sessionStorage.removeItem("post_login_redirect");
     } catch (error) {
       console.warn(`Redirect error: ${error}`, "error");
@@ -36,7 +39,7 @@ export function useAuthRedirect() {
     () => session.value.isPending,
     (isPending) => {
       if (!isPending && session.value.data) {
-       void handleAuthenticated();
+        void handleAuthenticated();
       }
     },
     { immediate: true },
