@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from "zod";
 
 export const InventorySchema = z.object({
   id: z.uuid(),
@@ -10,13 +10,13 @@ export const InventorySchema = z.object({
   url: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
-})
+});
 
 export const insertInventorySchema = z.object({
   name: z.string(),
   quantity: z.number().min(1),
   cost: z.number().min(0).transform(String),
   url: z.string(),
-})
+});
 
-export type Inventory = z.infer<typeof InventorySchema>
+export type Inventory = z.infer<typeof InventorySchema>;

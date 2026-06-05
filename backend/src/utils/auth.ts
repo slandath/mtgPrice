@@ -1,14 +1,14 @@
-import { betterAuth } from 'better-auth'
-import { drizzleAdapter } from 'better-auth/adapters/drizzle'
-import { admin } from 'better-auth/plugins'
-import * as schema from '../db/schema'
-import { db } from '../index'
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { admin } from "better-auth/plugins";
+import * as schema from "../db/schema";
+import { db } from "../index";
 
-const frontendUrl = process.env.FRONTEND_URL
+const frontendUrl = process.env.FRONTEND_URL;
 
 export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL,
-  basePath: '/api/auth',
+  basePath: "/api/auth",
   trustedOrigins: frontendUrl ? [frontendUrl] : [],
   session: {
     expiresIn: 60 * 60 * 24 * 7,
@@ -24,7 +24,7 @@ export const auth = betterAuth({
     max: 20,
   },
   database: drizzleAdapter(db, {
-    provider: 'pg',
+    provider: "pg",
     schema,
   }),
   socialProviders: {
@@ -34,23 +34,24 @@ export const auth = betterAuth({
     },
   },
   advanced: {
-    cookiePrefix: 'mtgPrice',
-    useSecureCookies: process.env.NODE_ENV === 'production',
-    defaultCookieAttributes: process.env.NODE_ENV === 'production'
-      ? {
-          sameSite: 'none',
-          secure: true,
-        }
-      : {
-          sameSite: 'lax',
-          secure: false,
-        },
+    cookiePrefix: "mtgPrice",
+    useSecureCookies: process.env.NODE_ENV === "production",
+    defaultCookieAttributes:
+      process.env.NODE_ENV === "production"
+        ? {
+            sameSite: "none",
+            secure: true,
+          }
+        : {
+            sameSite: "lax",
+            secure: false,
+          },
   },
   user: {
     additionalFields: {
       role: {
-        type: 'string',
-        defaultValue: 'user',
+        type: "string",
+        defaultValue: "user",
         required: false,
         input: false,
       },
@@ -58,7 +59,7 @@ export const auth = betterAuth({
   },
   plugins: [
     admin({
-      adminUserIds: process.env.ADMIN_USER_IDS ? process.env.ADMIN_USER_IDS.split(',') : [],
+      adminUserIds: process.env.ADMIN_USER_IDS ? process.env.ADMIN_USER_IDS.split(",") : [],
     }),
   ],
-})
+});
