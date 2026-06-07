@@ -19,4 +19,10 @@ export const insertInventorySchema = z.object({
   url: z.url().min(1),
 });
 
+export const updateInventorySchema = z.object({
+  name: z.string().min(1).max(100).optional(),
+  quantity: z.number().min(1).optional(),
+  cost: z.number().min(0).transform(String).optional(),
+});
+
 export type Inventory = z.infer<typeof InventorySchema>;
