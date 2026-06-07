@@ -47,6 +47,14 @@ const mutation = useMutation({
     });
     formRef.value?.reset();
   },
+  onError: (error) => {
+    console.error("Failed to add item:", error);
+    toast.add({
+      severity: "error",
+      summary: "Data Error",
+      detail: `Failed to add item: ${error.message}`,
+    });
+  },
 });
 
 function handleSubmit({ valid, values }: FormSubmitEvent) {

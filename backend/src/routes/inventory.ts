@@ -4,7 +4,7 @@ import { inventory } from "../db/schema";
 import { db } from "../index";
 import { priceFetch } from "../services/priceFetch";
 import { refreshAllPrices } from "../services/refreshAllPrices";
-import { insertInventorySchema } from "../types/inventory.schema";
+import { insertInventorySchema, updateInventorySchema } from "../types/inventory.schema";
 import { auth } from "../utils/auth";
 
 export default async function inventoryRoutes(app: FastifyInstance) {
@@ -53,6 +53,25 @@ export default async function inventoryRoutes(app: FastifyInstance) {
       .returning();
     return reply.status(201).send({ item: userItem[0] });
   });
+
+  /*
+    Update name, cost or quantity on a single item in the inventory table
+  */
+
+  app.patch<{ Params: { id: string } }>("/:id", async (request, reply) => {
+    const parsed = updateInventorySchema.safeParse(request.body);
+    if (!parsed.success) throw app.httpErrors.badRequest();
+    const item = await db
+      .update(inventory)
+      .set(parsed.data)
+      .where(
+        and(eq(inventory.id, request.params.id), eq(inventory.userId, request.session.user.id)),
+      )
+      .returning();
+    if (!item.length) throw app.httpErrors.notFound("Item not found");
+    return reply.send(item[0]);
+  });
+
   /*
     Update the price on a single item in the inventory table
   */
