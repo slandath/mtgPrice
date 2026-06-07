@@ -5,24 +5,26 @@ import InputText from "primevue/inputtext";
 import Column from "primevue/column";
 import DataTable, { type DataTableRowEditSaveEvent } from "primevue/datatable";
 import Message from "primevue/message";
+import { useToast } from "primevue/usetoast";
 import { ref, reactive } from "vue";
 import { fetchFromAPI } from "@/api";
 
 interface InventoryItem {
-  id: string
-  userId: string
-  name: string
-  quantity: number
-  currentPrice: string  // numeric from Drizzle → string in JS
-  cost: string    
-  url: string
-  createdAt: string
-  updatedAt: string
+  id: string;
+  userId: string;
+  name: string;
+  quantity: number;
+  currentPrice: string; // numeric from Drizzle → string in JS
+  cost: string;
+  url: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 const queryClient = useQueryClient();
 const editingRows = ref<InventoryItem[]>([]);
 const loadingItems = reactive<Record<string, boolean>>({});
+const toast = useToast();
 
 const { isPending, isFetching, isError, data, error } = useQuery({
   queryKey: ["items"],
@@ -44,10 +46,10 @@ const fetchPriceMutation = useMutation({
 
 const saveEditMutation = useMutation({
   mutationFn: async (item: InventoryItem) => {
-    const { id, userId, currentPrice, url, createdAt, updatedAt, ...fields } = item
+    const { id, userId, currentPrice, url, createdAt, updatedAt, ...fields } = item;
     const payload = {
       ...fields,
-      cost: Number(fields.cost)
+      cost: Number(fields.cost),
     };
     return fetchFromAPI(`/api/inventory/${id}`, {
       method: "PATCH",
@@ -55,11 +57,18 @@ const saveEditMutation = useMutation({
     });
   },
   onSuccess: async (_data, variables) => {
-    queryClient.invalidateQueries({ queryKey: ["items"] })
+    queryClient.invalidateQueries({ queryKey: ["items"] });
     fetchPriceMutation.mutate(variables.id);
-}
+  },
+  onError: (error) => {
+    console.error("Failed to save item:", error);
+    toast.add({
+      severity: "error",
+      summary: "Data Error",
+      detail: `Failed to save item: ${error.message}`,
+    });
+  },
 });
-
 </script>
 
 <template>
@@ -74,7 +83,9 @@ const saveEditMutation = useMutation({
     editMode="row"
     v-model:editingRows="editingRows"
     dataKey="id"
-    @row-edit-save="(e: DataTableRowEditSaveEvent<InventoryItem>) => saveEditMutation.mutate(e.newData)"
+    @row-edit-save="
+      (e: DataTableRowEditSaveEvent<InventoryItem>) => saveEditMutation.mutate(e.newData)
+    "
     paginator
     :rows="10"
     :rowsPerPageOptions="[10, 25, 50]"
@@ -108,9 +119,9 @@ const saveEditMutation = useMutation({
       </template>
     </Column>
     <Column
-          :rowEditor="true"
-          style="width: 10%; min-width: 8rem"
-          bodyStyle="text-align:center"
-        ></Column>
+      :rowEditor="true"
+      style="width: 10%; min-width: 8rem"
+      bodyStyle="text-align:center"
+    ></Column>
   </DataTable>
 </template>
