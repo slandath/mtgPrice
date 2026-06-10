@@ -3,8 +3,7 @@ import { createAuthClient } from "better-auth/vue";
 
 export const authClient = createAuthClient({
   baseURL: "/api/auth",
-  fetchOptions: {
-  },
+  fetchOptions: {},
   customFetch: (input: RequestInfo | URL, init = {}) =>
     fetch(input, { ...init, credentials: "include" }),
   plugins: [

@@ -7,9 +7,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import inventoryRoutes from "./routes/inventory";
 import { auth } from "./utils/auth";
-import { request } from "node:http";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function getAllowedOrigins(): string | string[] {
   const corsOrigin = process.env.CORS_ORIGIN;
@@ -87,15 +86,15 @@ export async function buildApp() {
 
   await app.register(fastifyStatic, {
     root: path.join(__dirname, "../../frontend/dist"),
-    wildcard: false
-  })
+    wildcard: false,
+  });
 
   app.setNotFoundHandler(async (request, reply) => {
     if (request.method === "GET") {
-      return reply.sendFile("index.html")
+      return reply.sendFile("index.html");
     }
-    return reply.status(404).send({ error: "Not found" })
-  })
+    return reply.status(404).send({ error: "Not found" });
+  });
 
   app.setErrorHandler((error: FastifyError, request: FastifyRequest, reply: FastifyReply) => {
     request.log.error({ err: error }, "Unhandled route error");
