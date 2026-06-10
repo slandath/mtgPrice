@@ -90,7 +90,7 @@ export async function buildApp() {
   });
 
   app.setNotFoundHandler(async (request, reply) => {
-    if (request.method === "GET") {
+    if (request.method === "GET" && !request.url.startsWith("/api/")) {
       return reply.sendFile("index.html");
     }
     return reply.status(404).send({ error: "Not found" });
