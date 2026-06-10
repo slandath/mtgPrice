@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "pnpm -r --parallel dev",
     "start": "pnpm --filter backend start",
-    "build": "pnpm -r build",
+    "build": "pnpm --filter frontend build && pnpm --filter backend build",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "fmt": "oxfmt",

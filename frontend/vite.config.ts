@@ -10,6 +10,11 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
     allowedHosts: ["app", ".railway.app", "mtgprice.tomslanda.com"],
+    proxy: {
+      "/api": {
+        target: "http://localhost:3000",
+      },
+    },
     hmr: {
       host: "localhost",
       port: 5173,
