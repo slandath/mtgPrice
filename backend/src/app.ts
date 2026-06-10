@@ -1,9 +1,15 @@
 import cors from "@fastify/cors";
+import fastifyStatic from "@fastify/static";
 import rateLimit from "@fastify/rate-limit";
 import fastifySensible from "@fastify/sensible";
 import Fastify, { FastifyError, FastifyReply, FastifyRequest } from "fastify";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import inventoryRoutes from "./routes/inventory";
 import { auth } from "./utils/auth";
+import { request } from "node:http";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 function getAllowedOrigins(): string | string[] {
   const corsOrigin = process.env.CORS_ORIGIN;
@@ -23,8 +29,8 @@ export async function buildApp() {
   await app.register(cors, {
     origin: getAllowedOrigins(),
     credentials: true,
-    methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    // methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+    // allowedHeaders: ["Content-Type", "Authorization"],
   });
 
   await app.register(
@@ -79,16 +85,24 @@ export async function buildApp() {
 
   await app.register(inventoryRoutes, { prefix: "/api/inventory" });
 
+  await app.register(fastifyStatic, {
+    root: path.join(__dirname, "../../frontend/dist"),
+    wildcard: false
+  })
+
+  app.setNotFoundHandler(async (request, reply) => {
+    if (request.method === "GET") {
+      return reply.sendFile("index.html")
+    }
+    return reply.status(404).send({ error: "Not found" })
+  })
+
   app.setErrorHandler((error: FastifyError, request: FastifyRequest, reply: FastifyReply) => {
     request.log.error({ err: error }, "Unhandled route error");
     if (error.statusCode && error.statusCode < 500) {
       return reply.status(error.statusCode).send({ error: error.message });
     }
     return reply.status(500).send({ error: "Internal server error" });
-  });
-
-  app.get("/", async () => {
-    return { hello: "world" };
   });
 
   return app;
