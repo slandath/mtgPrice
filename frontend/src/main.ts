@@ -1,4 +1,4 @@
-import Aura from "@primeuix/themes/aura";
+import Material from "@primeuix/themes/material"
 import { VueQueryPlugin } from "@tanstack/vue-query";
 import PrimeVue from "primevue/config";
 import { createApp } from "vue";
@@ -11,7 +11,7 @@ import "./assets/styles/main.css";
 createApp(App)
   .use(PrimeVue, {
     theme: {
-      preset: Aura,
+      preset: Material,
       options: {
         prefix: "p",
         darkModeSelector: false,
