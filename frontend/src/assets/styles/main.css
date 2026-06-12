@@ -3,12 +3,20 @@
 
 body {
   font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--p-stone-100);
+}
+
+.h1-heading {
+  margin-left: 2rem;
+  font-size: 2.25rem;
+  color: var(--p-stone-800);
 }
 
 .grid-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
   gap: 5rem;
+  padding: 0 0 0 2rem;
 }
 
 .card {
@@ -21,7 +29,7 @@ body {
 }
 
 .form-container {
-  padding: 0 1rem 0 1rem;
+  padding: 0 1rem 0 2rem;
 }
 
 .padding {
@@ -29,7 +37,7 @@ body {
 }
 
 .spacer {
-  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
 }
 
 .login-container {
@@ -68,5 +76,5 @@ body {
 }
 
 .table-container {
-  padding: 1rem 1rem 0 1rem;
+  padding: 1rem 1rem 0 2rem;
 }

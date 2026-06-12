@@ -74,7 +74,6 @@ function handleSubmit({ valid, values }: FormSubmitEvent) {
       :validate-on-blur="true"
       @submit="handleSubmit"
     >
-      <h2>Add Item</h2>
       <div class="spacer">
         <FloatLabel variant="on">
           <InputNumber name="quantity" input-id="quantity" fluid />

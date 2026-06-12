@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import TotalWidget from "@/components/TotalWidget.vue";
+import DashboardWidgets from "@/components/DashboardWidgets.vue";
 </script>
 
-<template class="grid-container">
-  <TotalWidget />
+<template>
+    <h1 class="h1-heading">Dashboard</h1>
+  <DashboardWidgets />
 </template>

@@ -2,17 +2,17 @@ import { watch } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
 import { authClient } from "../auth-client";
 import Add from "@/views/Add.vue";
-import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 import Dashboard from "../views/Dashboard.vue";
+import Inventory from "../views/Inventory.vue"
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: "/login", component: Login },
-    { path: "/", component: Home, meta: { requiresAuth: true } },
+    { path: "/", component: Dashboard, meta: { requiresAuth: true } },
     { path: "/add", component: Add, meta: { requiresAuth: true } },
-    { path: "/dashboard", component: Dashboard, meta: { requiresAuth: true } },
+    { path: "/inventory", component: Inventory, meta: { requiresAuth: true } },
   ],
 });
 

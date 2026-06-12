@@ -24,7 +24,7 @@ const gainLoss = computed(() =>
 <template>
   <div class="grid-container">
     <Card class="card">
-      <template #title>Inventory Value</template>
+      <template #title>Market Value</template>
       <template #content>
         <p>$ {{ marketValue }}</p>
       </template>
