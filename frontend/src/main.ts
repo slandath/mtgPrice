@@ -1,4 +1,4 @@
-import Material from "@primeuix/themes/material"
+import Material from "@primeuix/themes/material";
 import { VueQueryPlugin } from "@tanstack/vue-query";
 import PrimeVue from "primevue/config";
 import { createApp } from "vue";
