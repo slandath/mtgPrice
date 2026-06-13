@@ -73,57 +73,58 @@ const saveEditMutation = useMutation({
 
 <template>
   <div class="table-container">
-  <Message v-if="isPending" severity="secondary" size="large" variant="simple">Loading...</Message>
-  <Message v-else-if="isError" severity="error" size="large" variant="simple"
-    >Error: {{ error?.message }}</Message
-  >
-  <DataTable
-    v-else
-    :value="data.inventory"
-    :loading="isFetching"
-    editMode="row"
-    v-model:editingRows="editingRows"
-    dataKey="id"
-    @row-edit-save="
-      (e: DataTableRowEditSaveEvent<InventoryItem>) => saveEditMutation.mutate(e.newData)
-    "
-    paginator
-    :rows="10"
-    :rowsPerPageOptions="[10, 25, 50]"
-    scrollable
-    scrollHeight="80vh"
-  >
-    <Column field="quantity" header="Qty" sortable>
-      <template #editor="{ data, field }">
-        <InputNumber v-model="data[field]" :min="1" fluid autofocus />
-      </template>
-    </Column>
-    <Column field="name" header="Name" sortable>
-      <template #editor="{ data, field }">
-        <InputText v-model="data[field]" fluid />
-      </template>
-    </Column>
-    <Column field="currentPrice" header="Current Price" sortable>
-      <template #body="slotProps"> $ {{ slotProps.data.currentPrice }} </template>
-    </Column>
-    <Column field="cost" header="Paid (Each)" sortable>
-      <template #body="slotProps"> $ {{ slotProps.data.cost }} </template>
-      <template #editor="{ data, field }">
-        <InputNumber
-          v-model.number="data[field]"
-          mode="currency"
-          currency="USD"
-          locale="en-US"
-          fluid
-        />
-      </template>
-    </Column>
-    <Column
-      :rowEditor="true"
-      style="width: 10%; min-width: 8rem"
-      bodyStyle="text-align:center"
-    ></Column>
-  </DataTable>
+    <Message v-if="isPending" severity="secondary" size="large" variant="simple"
+      >Loading...</Message
+    >
+    <Message v-else-if="isError" severity="error" size="large" variant="simple"
+      >Error: {{ error?.message }}</Message
+    >
+    <DataTable
+      v-else
+      :value="data.inventory"
+      :loading="isFetching"
+      editMode="row"
+      v-model:editingRows="editingRows"
+      dataKey="id"
+      @row-edit-save="
+        (e: DataTableRowEditSaveEvent<InventoryItem>) => saveEditMutation.mutate(e.newData)
+      "
+      paginator
+      :rows="10"
+      :rowsPerPageOptions="[10, 25, 50]"
+      scrollable
+      scrollHeight="80vh"
+    >
+      <Column field="quantity" header="Qty" sortable>
+        <template #editor="{ data, field }">
+          <InputNumber v-model="data[field]" :min="1" fluid autofocus />
+        </template>
+      </Column>
+      <Column field="name" header="Name" sortable>
+        <template #editor="{ data, field }">
+          <InputText v-model="data[field]" fluid />
+        </template>
+      </Column>
+      <Column field="currentPrice" header="Current Price" sortable>
+        <template #body="slotProps"> $ {{ slotProps.data.currentPrice }} </template>
+      </Column>
+      <Column field="cost" header="Paid (Each)" sortable>
+        <template #body="slotProps"> $ {{ slotProps.data.cost }} </template>
+        <template #editor="{ data, field }">
+          <InputNumber
+            v-model.number="data[field]"
+            mode="currency"
+            currency="USD"
+            locale="en-US"
+            fluid
+          />
+        </template>
+      </Column>
+      <Column
+        :rowEditor="true"
+        style="width: 10%; min-width: 8rem"
+        bodyStyle="text-align:center"
+      ></Column>
+    </DataTable>
   </div>
-  
 </template>
