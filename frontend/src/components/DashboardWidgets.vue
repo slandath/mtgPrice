@@ -21,7 +21,7 @@ const costBasis = computed(
   () => data.value?.inventory.reduce((sum, item) => sum + Number(item.cost), 0) ?? 0,
 );
 const gainLoss = computed(() =>
-  costBasis === 0 ? 0 : ((marketValue.value - costBasis.value) / costBasis.value) * 100,
+  costBasis.value === 0 ? 0 : ((marketValue.value - costBasis.value) / costBasis.value) * 100,
 );
 const topItems = computed(() =>
   [...(data.value?.inventory ?? [])]
