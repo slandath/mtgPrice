@@ -12,7 +12,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "start": "tsx src/server.ts",
-    "build": "echo 'Skipped - running with tsx in production'"
+    "build": "echo 'Skipped - running with tsx in production'",
+    "type-check": "tsc -b"
   },
   "dependencies": {
     "@fastify/cors": "^11.2.0",
