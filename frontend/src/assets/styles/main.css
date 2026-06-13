@@ -8,7 +8,7 @@ body {
 
 .h1-heading {
   margin-left: 2rem;
-  font-size: 2.25rem;
+  font-size: clamp(1rem, 2.5vw, 2.25rem);
   color: var(--p-stone-800);
 }
 
@@ -16,11 +16,10 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
   gap: 5rem;
-  padding: 0 0 0 2rem;
+  padding: 0 2rem 0 2rem;
 }
 
 .card {
-  width: 25rem;
   overflow: hidden;
 }
 
@@ -29,15 +28,15 @@ body {
 }
 
 .form-container {
-  padding: 0 1rem 0 2rem;
-}
-
-.padding {
-  padding: 0.5rem 0 0.5rem 0;
+  padding: 0 2rem 0 2rem;
 }
 
 .spacer {
   padding-bottom: 1.5rem;
+}
+
+.padding-top {
+  padding-top: .75rem;
 }
 
 .login-container {
@@ -76,5 +75,5 @@ body {
 }
 
 .table-container {
-  padding: 1rem 1rem 0 2rem;
+  padding: 0rem 2rem 0 2rem;
 }

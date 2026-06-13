@@ -134,7 +134,7 @@ function handleSubmit({ valid, values }: FormSubmitEvent) {
         >
           {{ $form.url.error?.message }}
         </Message>
-        <Message size="small" severity="secondary" variant="simple" class="padding">
+        <Message size="small" severity="secondary" variant="simple" class="padding-top">
           Paste the TCG Player webpage
         </Message>
       </div>

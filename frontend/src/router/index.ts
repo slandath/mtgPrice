@@ -4,7 +4,7 @@ import { authClient } from "../auth-client";
 import Add from "@/views/Add.vue";
 import Login from "../views/Login.vue";
 import Dashboard from "../views/Dashboard.vue";
-import Inventory from "../views/Inventory.vue"
+import Inventory from "../views/Inventory.vue";
 
 const router = createRouter({
   history: createWebHistory(),

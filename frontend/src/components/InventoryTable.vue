@@ -72,12 +72,13 @@ const saveEditMutation = useMutation({
 </script>
 
 <template>
-  <Message v-if="isPending" severity="secondary" size="large" variant="simple" class="padding"
-    >Loading...</Message
+  <div class="table-container">
+  <Message v-if="isPending" severity="secondary" size="large" variant="simple">Loading...</Message>
+  <Message v-else-if="isError" severity="error" size="large" variant="simple"
+    >Error: {{ error?.message }}</Message
   >
-  <span v-else-if="isError">Error: {{ error?.message }}</span>
   <DataTable
-    v-else-if="data"
+    v-else
     :value="data.inventory"
     :loading="isFetching"
     editMode="row"
@@ -91,7 +92,6 @@ const saveEditMutation = useMutation({
     :rowsPerPageOptions="[10, 25, 50]"
     scrollable
     scrollHeight="80vh"
-    class="table-container"
   >
     <Column field="quantity" header="Qty" sortable>
       <template #editor="{ data, field }">
@@ -124,4 +124,6 @@ const saveEditMutation = useMutation({
       bodyStyle="text-align:center"
     ></Column>
   </DataTable>
+  </div>
+  
 </template>

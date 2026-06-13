@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import { useQuery, useQueryClient } from "@tanstack/vue-query";
 import { fetchFromAPI } from "@/api";
+import { formatCurrency, formatPercent } from "../utils/numberFormat"
 import Card from "primevue/card";
 
 const { isPending, isFetching, isError, data, error } = useQuery({
@@ -9,6 +10,8 @@ const { isPending, isFetching, isError, data, error } = useQuery({
   queryFn: () => fetchFromAPI("/api/inventory"),
   staleTime: 30 * 60 * 1000,
 });
+
+const hasItems = computed(()=> data.value?.inventory?.length > 0)
 
 const marketValue = computed(
   () => data.value?.inventory.reduce((sum, item) => sum + Number(item.currentPrice), 0) ?? 0,
@@ -23,23 +26,27 @@ const gainLoss = computed(() =>
 
 <template>
   <div class="grid-container">
+    <Message v-if="isPending" severity="secondary" size="large">Loading...</Message>
+    <Message v-else-if="isError" severity="error" size="large">Error</Message>
+    <template v-else>
     <Card class="card">
       <template #title>Market Value</template>
       <template #content>
-        <p>$ {{ marketValue }}</p>
+        <p>{{ formatCurrency(marketValue) }}</p>
       </template>
     </Card>
     <Card class="card">
       <template #title>Cost Basis</template>
       <template #content>
-        <p>$ {{ costBasis }}</p>
+        <p>{{ formatCurrency(costBasis) }}</p>
       </template>
     </Card>
     <Card class="card">
       <template #title>Gain/Loss</template>
       <template #content>
-        <p>{{ gainLoss }} %</p>
+        <p>{{ formatPercent(gainLoss) }}</p>
       </template>
     </Card>
+  </template>
   </div>
 </template>

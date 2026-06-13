@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import { and, desc, eq } from "drizzle-orm";
+import { and, asc, eq } from "drizzle-orm";
 import { inventory } from "../db/schema";
 import { db } from "../index";
 import { priceFetch } from "../services/priceFetch";
@@ -26,7 +26,7 @@ export default async function inventoryRoutes(app: FastifyInstance) {
       .select()
       .from(inventory)
       .where(eq(inventory.userId, request.session.user.id))
-      .orderBy(desc(inventory.currentPrice));
+      .orderBy(asc(inventory.name));
     return reply.status(200).send({
       inventory: userInventory,
       message: userInventory.length === 0 ? "No items found for user" : undefined,
