@@ -1,18 +1,33 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { useQuery, useQueryClient } from "@tanstack/vue-query";
+import { useQuery } from "@tanstack/vue-query";
 import { fetchFromAPI } from "@/api";
 import { formatCurrency, formatPercent } from "../utils/numberFormat";
 import Card from "primevue/card";
 import Message from "primevue/message";
 
-const { isPending, isFetching, isError, data, error } = useQuery({
+interface InventoryItem {
+  id: string;
+  userId: string;
+  name: string;
+  quantity: number;
+  currentPrice: string; // numeric from Drizzle → string in JS
+  cost: string;
+  url: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface InventoryResponse {
+  inventory: InventoryItem[];
+  message?: string;
+}
+
+const { isPending, isError, data, error } = useQuery<InventoryResponse>({
   queryKey: ["items"],
   queryFn: () => fetchFromAPI("/api/inventory"),
   staleTime: 30 * 60 * 1000,
 });
-
-const hasItems = computed(() => data.value?.inventory?.length > 0);
 
 const marketValue = computed(
   () => data.value?.inventory.reduce((sum, item) => sum + Number(item.currentPrice), 0) ?? 0,
@@ -33,7 +48,7 @@ const topItems = computed(() =>
 <template>
   <div class="grid-container">
     <Message v-if="isPending" severity="secondary" size="large">Loading...</Message>
-    <Message v-else-if="isError" severity="error" size="large">Error</Message>
+    <Message v-else-if="isError" severity="error" size="large">Error: {{ error?.message }}</Message>
     <template v-else>
       <Card class="card">
         <template #title>Market Value</template>
