@@ -28,6 +28,14 @@ async function handleSignOut() {
       <ul class="flex">
         <li>
           <Button
+            icon="pi pi-list"
+            aria-label="View Inventory"
+            v-tooltip.bottom="{ value: 'View Inventory', showDelay: 1000 }"
+            @click="router.push('/inventory')"
+          />
+        </li>
+        <li>
+          <Button
             icon="pi pi-plus"
             aria-label="Add Item"
             v-tooltip.bottom="{ value: 'Add Item', showDelay: 1000 }"

@@ -74,8 +74,7 @@ function handleSubmit({ valid, values }: FormSubmitEvent) {
       :validate-on-blur="true"
       @submit="handleSubmit"
     >
-      <h2>Add Item</h2>
-      <div class="spacer">
+      <div class="spacer-1">
         <FloatLabel variant="on">
           <InputNumber name="quantity" input-id="quantity" fluid />
           <label for="quantity">Quantity</label>
@@ -84,7 +83,7 @@ function handleSubmit({ valid, values }: FormSubmitEvent) {
           {{ $form.quantity.error?.message }}
         </Message>
       </div>
-      <div class="spacer">
+      <div class="spacer-1">
         <FloatLabel variant="on">
           <InputText id="name" name="name" fluid />
           <label for="name">Name</label>
@@ -99,7 +98,7 @@ function handleSubmit({ valid, values }: FormSubmitEvent) {
           {{ $form.name.error?.message }}
         </Message>
       </div>
-      <div class="spacer">
+      <div class="spacer-1">
         <FloatLabel variant="on">
           <InputNumber
             name="cost"
@@ -121,7 +120,7 @@ function handleSubmit({ valid, values }: FormSubmitEvent) {
           {{ $form.cost.error?.message }}
         </Message>
       </div>
-      <div class="spacer">
+      <div class="spacer-1">
         <FloatLabel variant="on">
           <InputText id="url" name="url" fluid />
           <label for="url">URL</label>
@@ -135,7 +134,7 @@ function handleSubmit({ valid, values }: FormSubmitEvent) {
         >
           {{ $form.url.error?.message }}
         </Message>
-        <Message size="small" severity="secondary" variant="simple" class="padding">
+        <Message size="small" severity="secondary" variant="simple" class="padding-top">
           Paste the TCG Player webpage
         </Message>
       </div>

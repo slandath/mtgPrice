@@ -13,7 +13,6 @@
   },
   "customizations": {
     "vscode": {
-      "settings": {},
       "extensions": ["Vue.volar", "bradlc.vscode-tailwindcss"]
     }
   },
