@@ -7,7 +7,5 @@
     "skipLibCheck": true,
     "module": "nodenext"
   },
-  "include": [
-    "src/**/*"
-  ]
+  "include": ["src/**/*"]
 }
