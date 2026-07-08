@@ -1,6 +1,6 @@
 import cron from "node-cron";
-import { buildApp } from "./app";
-import { refreshAllPrices } from "./services/refreshAllPrices";
+import { buildApp } from "./app.js";
+import { refreshAllPrices } from "./services/refreshAllPrices.js";
 
 const PORT = Number(process.env.PORT) || 3000;
 

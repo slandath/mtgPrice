@@ -1,5 +1,5 @@
 // backend/src/types/fastify.d.ts
-import type { auth } from "../utils/auth";
+import type { auth } from "../utils/auth.js";
 
 type Session = NonNullable<Awaited<ReturnType<typeof auth.api.getSession>>>;
 
