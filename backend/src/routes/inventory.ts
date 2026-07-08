@@ -1,11 +1,11 @@
 import type { FastifyInstance } from "fastify";
 import { and, asc, eq } from "drizzle-orm";
-import { inventory } from "../db/schema";
-import { db } from "../index";
-import { priceFetch } from "../services/priceFetch";
-import { refreshAllPrices } from "../services/refreshAllPrices";
-import { insertInventorySchema, updateInventorySchema } from "../types/inventory.schema";
-import { auth } from "../utils/auth";
+import { inventory } from "../db/schema.js";
+import { db } from "../index.js";
+import { priceFetch } from "../services/priceFetch.js";
+import { refreshAllPrices } from "../services/refreshAllPrices.js";
+import { insertInventorySchema, updateInventorySchema } from "../types/inventory.schema.js";
+import { auth } from "../utils/auth.js";
 
 export default async function inventoryRoutes(app: FastifyInstance) {
   app.addHook("preHandler", async (request, _reply) => {

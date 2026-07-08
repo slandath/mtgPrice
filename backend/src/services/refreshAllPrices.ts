@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
-import { inventory } from "../db/schema";
-import { db } from "../index";
-import { priceFetch } from "./priceFetch";
+import { inventory } from "../db/schema.js";
+import { db } from "../index.js";
+import { priceFetch } from "./priceFetch.js";
 
 export async function refreshAllPrices() {
   const allItems = await db.select().from(inventory);

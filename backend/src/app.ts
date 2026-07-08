@@ -5,8 +5,8 @@ import fastifySensible from "@fastify/sensible";
 import Fastify, { FastifyError, FastifyReply, FastifyRequest } from "fastify";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import inventoryRoutes from "./routes/inventory";
-import { auth } from "./utils/auth";
+import inventoryRoutes from "./routes/inventory.js";
+import { auth } from "./utils/auth.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
