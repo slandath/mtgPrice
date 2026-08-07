@@ -13,15 +13,23 @@ async function start() {
     process.exit(1);
   }
 
-  const shutdown = async () => {
-    app.log.info("Shutting down...");
-    await app.close();
-    await db.$client.end();
+  let shuttingDown = false;
+
+  const shutdown = async (signal: string) => {
+    if (shuttingDown) return;
+    shuttingDown = true;
+    app.log.info(`Received ${signal}, shutting down...`);
+    const results = await Promise.allSettled([app.close(), db.$client.end()]);
+    const failures = results.filter((r) => r.status === "rejected");
+    if (failures.length > 0) {
+      app.log.error("One or more cleanup steps failed during shutdown");
+      process.exit(1);
+    }
     process.exit(0);
   };
 
-  process.on("SIGTERM", shutdown);
-  process.on("SIGINT", shutdown);
+  process.on("SIGTERM", () => shutdown("SIGTERM"));
+  process.on("SIGINT", () => shutdown("SIGINT"));
 }
 
 start();
