@@ -1,9 +1,33 @@
 <script setup lang="ts">
+import { useMutation, useQueryClient } from "@tanstack/vue-query";
 import Button from "primevue/button";
+import { useToast } from "primevue/usetoast";
 import { useRouter } from "vue-router";
+import { fetchFromAPI } from "@/api";
 import { authClient } from "@/auth-client";
 
 const router = useRouter();
+const toast = useToast();
+const queryClient = useQueryClient();
+
+const refreshPricesMutation = useMutation({
+  mutationFn: () => fetchFromAPI("/api/inventory/refresh-all", { method: "POST" }),
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ["items"] });
+    toast.add({
+      severity: "success",
+      summary: "Prices Updated",
+      detail: "All prices have been refreshed.",
+    });
+  },
+  onError: (error) => {
+    toast.add({
+      severity: "error",
+      summary: "Refresh Failed",
+      detail: error.message,
+    });
+  },
+});
 
 async function handleSignOut() {
   try {
@@ -40,6 +64,15 @@ async function handleSignOut() {
             aria-label="Add Item"
             v-tooltip.bottom="{ value: 'Add Item', showDelay: 1000 }"
             @click="router.push('/add')"
+          />
+        </li>
+        <li>
+          <Button
+            icon="pi pi-refresh"
+            :loading="refreshPricesMutation.isPending.value"
+            aria-label="Refresh All Prices"
+            v-tooltip.bottom="{ value: 'Refresh All Prices', showDelay: 1000 }"
+            @click="refreshPricesMutation.mutate()"
           />
         </li>
         <li>
