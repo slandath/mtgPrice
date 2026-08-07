@@ -9,9 +9,6 @@ import { auth } from "../utils/auth.js";
 
 export default async function inventoryRoutes(app: FastifyInstance) {
   app.addHook("preHandler", async (request, _reply) => {
-    // Skip auth for the cron job route
-    const routePath = request.routeOptions.url;
-    if (request.method === "PATCH" && routePath?.endsWith("/refresh-all")) return;
     const session = await auth.api.getSession({
       headers: new Headers(request.headers as Record<string, string>),
     });
@@ -91,13 +88,9 @@ export default async function inventoryRoutes(app: FastifyInstance) {
     return reply.send({ price });
   });
   /*
-  Route for weekly price update cron job
+  Refresh all prices, triggered by an authenticated user
 */
-  app.patch("/refresh-all", async (request, reply) => {
-    const cronSecret = request.headers["cron-secret"];
-    if (cronSecret !== process.env.CRON_SECRET) {
-      throw app.httpErrors.unauthorized();
-    }
+  app.post("/refresh-all", async (request, reply) => {
     const results = await refreshAllPrices();
     return reply.send(results);
   });
