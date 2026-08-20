@@ -3,11 +3,9 @@ import { Pool } from "pg";
 import * as schema from "./db/schema.js";
 import "dotenv/config";
 
-const isProduction = process.env.NODE_ENV === "production";
-
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL!,
-  ssl: isProduction ? { rejectUnauthorized: true } : { rejectUnauthorized: false },
+  ssl: { rejectUnauthorized: false },
   max: 2,
   idleTimeoutMillis: 60000,
   connectionTimeoutMillis: 10000,
