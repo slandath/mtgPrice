@@ -83,8 +83,8 @@ const saveEditMutation = useMutation({
 
 const deleteItemMutation = useMutation({
   mutationFn: (id: string) => fetchFromAPI(`/api/inventory/${id}`, { method: "DELETE" }),
-  onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ["items"] });
+  onSuccess: async () => {
+    await queryClient.invalidateQueries({ queryKey: ["items"] });
     toast.add({ severity: "success", summary: "Deleted", detail: "Item removed from inventory" });
   },
   onError: (error) => {
@@ -173,6 +173,7 @@ function confirmDelete(item: InventoryItem) {
               rounded
               severity="danger"
               :disabled="deleteItemMutation.isPending.value"
+              :aria-label="`Delete ${slotProps.data.name}`"
               @click="confirmDelete(slotProps.data)"
             />
           </template>

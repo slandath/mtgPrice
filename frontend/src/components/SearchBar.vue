@@ -11,7 +11,7 @@ const model = defineModel<string>({ required: true });
   <div class="search-bar">
     <IconField>
       <InputIcon class="pi pi-search" />
-      <InputText v-model="model" placeholder="Search items…" />
+      <InputText v-model="model" aria-label="Search items" placeholder="Search items…" />
     </IconField>
     <Button
       v-if="model"

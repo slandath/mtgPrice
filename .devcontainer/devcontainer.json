@@ -16,5 +16,5 @@
       "extensions": ["Vue.volar", "bradlc.vscode-tailwindcss"]
     }
   },
-  "postCreateCommand": "CI=true pnpm install && curl -fsSL https://opencode.ai/install | bash"
+  "postCreateCommand": "set -o pipefail; CI=true pnpm install && curl -fsSL https://opencode.ai/install | bash"
 }
