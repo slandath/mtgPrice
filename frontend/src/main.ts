@@ -1,6 +1,7 @@
 import Material from "@primeuix/themes/material";
 import { VueQueryPlugin } from "@tanstack/vue-query";
 import PrimeVue from "primevue/config";
+import ConfirmationService from "primevue/confirmationservice";
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
@@ -20,6 +21,7 @@ createApp(App)
     },
   })
   .use(ToastService)
+  .use(ConfirmationService)
   .use(router)
   .use(VueQueryPlugin)
   .directive("tooltip", Tooltip)
