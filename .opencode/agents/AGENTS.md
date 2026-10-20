@@ -21,3 +21,12 @@ Please review to the AI Agent Guidelines located at ~/.config/opencode/AGENTS.md
 | CSS | Tailwind |
 | Monorepo | pnpm workspaces |
 | Dev Env | VS Code Dev Container |
+
+## Conventions
+
+- Vue 3: Composition API exclusively, `<script setup lang="ts">`; typed `defineProps<...>()` / `defineModel`, no Options API
+- Pinia: setup stores (`defineStore` with a setup function), typed refs returned from the store; no options-style stores
+- Vue Router 4: `router.ts` per area with typed route records; guards via `beforeEach` + route meta
+- Drizzle: schema in code first; migrations generated, never hand-edited
+- Fastify: validate everything with typed schemas; single error handler; plugins for encapsulated features
+- pnpm workspaces: use `pnpm -F <pkg> ...` filters; shared deps pinned in the workspace root
