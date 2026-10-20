@@ -1,5 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import { and, asc, eq } from "drizzle-orm";
+import { z } from "zod";
 import { inventory } from "../db/schema.js";
 import { db } from "../index.js";
 import { priceFetch } from "../services/priceFetch.js";
@@ -15,6 +16,10 @@ export default async function inventoryRoutes(app: FastifyInstance) {
     if (!session) throw app.httpErrors.unauthorized();
     request.session = session;
   });
+
+  const requireItemIdParam = (id: string) => {
+    if (!z.uuid().safeParse(id).success) throw app.httpErrors.badRequest("Invalid item id");
+  };
   /*
   Get all items in inventory table
 */
@@ -56,6 +61,7 @@ export default async function inventoryRoutes(app: FastifyInstance) {
   */
 
   app.patch<{ Params: { id: string } }>("/:id", async (request, reply) => {
+    requireItemIdParam(request.params.id);
     const parsed = updateInventorySchema.safeParse(request.body);
     if (!parsed.success) throw app.httpErrors.badRequest();
     const item = await db
@@ -74,6 +80,7 @@ export default async function inventoryRoutes(app: FastifyInstance) {
   */
 
   app.patch<{ Params: { id: string } }>("/:id/fetch-price", async (request, reply) => {
+    requireItemIdParam(request.params.id);
     const item = await db
       .select()
       .from(inventory)
@@ -86,6 +93,21 @@ export default async function inventoryRoutes(app: FastifyInstance) {
     if (!price) throw app.httpErrors.badRequest("Could not fetch price");
     await db.update(inventory).set({ currentPrice: price }).where(eq(inventory.id, item[0].id));
     return reply.send({ price });
+  });
+  /*
+    Delete a single item from the inventory table
+  */
+
+  app.delete<{ Params: { id: string } }>("/:id", async (request, reply) => {
+    requireItemIdParam(request.params.id);
+    const item = await db
+      .delete(inventory)
+      .where(
+        and(eq(inventory.id, request.params.id), eq(inventory.userId, request.session.user.id)),
+      )
+      .returning();
+    if (!item.length) throw app.httpErrors.notFound("Item not found");
+    return reply.status(204).send();
   });
   /*
   Refresh all prices, triggered by an authenticated user
