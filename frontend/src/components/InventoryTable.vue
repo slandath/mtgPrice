@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
+import Button from "primevue/button";
 import InputNumber from "primevue/inputnumber";
 import InputText from "primevue/inputtext";
 import Column from "primevue/column";
 import DataTable, { type DataTableRowEditSaveEvent } from "primevue/datatable";
 import Message from "primevue/message";
+import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "primevue/usetoast";
 import { ref, reactive } from "vue";
 import { fetchFromAPI } from "@/api";
@@ -25,6 +27,7 @@ const queryClient = useQueryClient();
 const editingRows = ref<InventoryItem[]>([]);
 const loadingItems = reactive<Record<string, boolean>>({});
 const toast = useToast();
+const confirm = useConfirm();
 
 const { isPending, isFetching, isError, data, error } = useQuery({
   queryKey: ["items"],
@@ -69,6 +72,34 @@ const saveEditMutation = useMutation({
     });
   },
 });
+
+const deleteItemMutation = useMutation({
+  mutationFn: (id: string) => fetchFromAPI(`/api/inventory/${id}`, { method: "DELETE" }),
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ["items"] });
+    toast.add({ severity: "success", summary: "Deleted", detail: "Item removed from inventory" });
+  },
+  onError: (error) => {
+    console.error("Failed to delete item:", error);
+    toast.add({
+      severity: "error",
+      summary: "Data Error",
+      detail: `Failed to delete: ${error.message}`,
+    });
+  },
+});
+
+function confirmDelete(item: InventoryItem) {
+  confirm.require({
+    header: "Delete Item",
+    message: `Delete "${item.name}"? This cannot be undone.`,
+    icon: "pi pi-exclamation-triangle",
+    rejectLabel: "Cancel",
+    acceptLabel: "Delete",
+    acceptProps: { severity: "danger" },
+    accept: () => deleteItemMutation.mutate(item.id),
+  });
+}
 </script>
 
 <template>
@@ -125,6 +156,18 @@ const saveEditMutation = useMutation({
         style="width: 10%; min-width: 8rem"
         bodyStyle="text-align:center"
       ></Column>
+      <Column header="Delete" style="width: 8%; min-width: 6rem" bodyStyle="text-align:center">
+        <template #body="slotProps">
+          <Button
+            icon="pi pi-trash"
+            text
+            rounded
+            severity="danger"
+            :disabled="deleteItemMutation.isPending.value"
+            @click="confirmDelete(slotProps.data)"
+          />
+        </template>
+      </Column>
     </DataTable>
   </div>
 </template>
