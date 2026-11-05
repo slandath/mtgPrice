@@ -15,6 +15,13 @@
       "when": 1779377343981,
       "tag": "0001_spooky_screwball",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793841954584,
+      "tag": "0002_overconfident_tinkerer",
+      "breakpoints": true
     }
   ]
 }
