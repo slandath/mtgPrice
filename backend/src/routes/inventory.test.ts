@@ -9,7 +9,9 @@ const {
   mockRefreshAll,
   mockOrderBy,
   mockLimit,
+  mockInsertValues,
   mockInsertReturning,
+  mockUpdateSet,
   mockUpdateWhere,
   mockUpdateReturning,
   mockDeleteReturning,
@@ -19,7 +21,9 @@ const {
   mockRefreshAll: vi.fn(),
   mockOrderBy: vi.fn(),
   mockLimit: vi.fn(),
+  mockInsertValues: vi.fn(),
   mockInsertReturning: vi.fn(),
+  mockUpdateSet: vi.fn(),
   mockUpdateWhere: vi.fn(),
   mockUpdateReturning: vi.fn(),
   mockDeleteReturning: vi.fn(),
@@ -28,8 +32,18 @@ const {
 vi.mock("../index.js", () => ({
   db: {
     select: () => ({ from: () => ({ where: () => ({ orderBy: mockOrderBy, limit: mockLimit }) }) }),
-    insert: () => ({ values: () => ({ returning: mockInsertReturning }) }),
-    update: () => ({ set: () => ({ where: mockUpdateWhere }) }),
+    insert: () => ({
+      values: (vals: unknown) => {
+        mockInsertValues(vals);
+        return { returning: mockInsertReturning };
+      },
+    }),
+    update: () => ({
+      set: (vals: unknown) => {
+        mockUpdateSet(vals);
+        return { where: mockUpdateWhere };
+      },
+    }),
     delete: () => ({ where: () => ({ returning: mockDeleteReturning }) }),
   },
 }));
@@ -155,6 +169,10 @@ describe("POST /", () => {
     const body = res.json();
     expect(body.item.userId).toBe(USER_ID);
     expect(body.item.name).toBe(validBody.name);
+    expect(mockInsertValues).toHaveBeenCalledTimes(1);
+    expect(mockInsertValues).toHaveBeenCalledWith(
+      expect.objectContaining({ userId: USER_ID, name: validBody.name }),
+    );
   });
 });
 
@@ -238,6 +256,9 @@ describe("PATCH /:id/fetch-price", () => {
 
     expect(res.statusCode).toBe(200);
     expect(res.json()).toEqual({ price: "12.34" });
+    expect(mockUpdateSet).toHaveBeenCalledTimes(1);
+    expect(mockUpdateSet).toHaveBeenCalledWith({ currentPrice: "12.34" });
+    expect(mockUpdateWhere).toHaveBeenCalledTimes(1);
   });
 });
 
