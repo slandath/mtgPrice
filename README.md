@@ -57,6 +57,18 @@ pnpm --filter frontend dev  # Frontend only
 
 Visit `http://localhost:5173` and sign in with GitHub.
 
+## Testing
+
+Unit tests use [Vitest](https://vitest.dev/) with co-located `*.test.ts` files.
+The suite needs no external services — network, Postgres, GitHub OAuth, and
+TCGPlayer are all mocked at module boundaries.
+
+```bash
+pnpm test                        # Run backend + frontend suites
+pnpm --filter backend test       # Backend only
+pnpm --filter frontend test      # Frontend only
+```
+
 ## License
 
 MIT
